@@ -6,7 +6,8 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'name',
-		'currentSquare'
+		'currentSquare',
+		'laps'
 	],
 	#category : 'IngSoft2-Model-Board',
 	#package : 'IngSoft2-Model',
@@ -16,6 +17,11 @@ Class {
 { #category : 'instance creation' }
 Player class >> named: aName [ 
 	^ self new initializeNamed: aName
+]
+
+{ #category : 'change position' }
+Player >> completeLap [
+	laps := laps + 1.
 ]
 
 { #category : 'accessing' }
@@ -29,9 +35,15 @@ Player >> initializeNamed: aName [
 	aName isEmpty ifTrue: [ self error: 'Name cannot be empty' ].
 	currentSquare := nil.
 	name := aName.
+	laps := 0.
 ]
 
-{ #category : 'path commands' }
+{ #category : 'accessing' }
+Player >> laps [
+	^ laps
+]
+
+{ #category : 'change position' }
 Player >> moveTo: aSquare [
 
 	currentSquare := aSquare.

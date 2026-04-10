@@ -6,7 +6,7 @@ Class {
 	#tag : 'Board-Tests'
 }
 
-{ #category : 'tests' }
+{ #category : 'tests - properties' }
 BoardTest >> testBoardKeepsSquaresOrder [
 
 	| aBoard firstSquare secondSquare |
@@ -19,7 +19,7 @@ BoardTest >> testBoardKeepsSquaresOrder [
 	self deny: firstSquare equals: secondSquare.
 ]
 
-{ #category : 'tests' }
+{ #category : 'tests - properties' }
 BoardTest >> testBoardKnowsItsSize [
 
 	| aBoard |
@@ -29,7 +29,7 @@ BoardTest >> testBoardKnowsItsSize [
 	self assert: (aBoard size) equals: 7.
 ]
 
-{ #category : 'tests' }
+{ #category : 'tests - initialization' }
 BoardTest >> testCreateBoardWithSquares [
 
 	| aBoard |
@@ -40,7 +40,36 @@ BoardTest >> testCreateBoardWithSquares [
 	self assert: (aBoard squareAt: 5) notNil.
 ]
 
-{ #category : 'tests - initialization' }
+{ #category : 'tests - moving players' }
+BoardTest >> testMovePlayerForward [
+
+	| aBoard aPlayer |
+	
+	aBoard := Board withAmountOfSquares: 5.
+	aPlayer := Player named: 'Player 1'.
+	
+	aBoard place: aPlayer at: 1.
+	aBoard move: aPlayer forward: 3.
+	
+	self assert: aPlayer currentSquare equals: (aBoard squareAt: 4).
+]
+
+{ #category : 'tests - moving players' }
+BoardTest >> testMovePlayerUsingDie [
+
+	| aBoard aPlayer aDie |
+	
+	aBoard := Board withAmountOfSquares: 5.
+	aPlayer := Player named: 'Player 1'.
+	aDie := MockedDie withSides: 3.
+	
+	aBoard place: aPlayer at: 1.
+	aBoard move: aPlayer forward: (aDie roll).
+	
+	self assert: aPlayer currentSquare equals: (aBoard squareAt: 4).
+]
+
+{ #category : 'tests - player position' }
 BoardTest >> testPlacingPlayerRemovesItFromPreviousSquare [
 
 	| aBoard aPlayer firstSquare secondSquare |
@@ -59,7 +88,7 @@ BoardTest >> testPlacingPlayerRemovesItFromPreviousSquare [
 	self assert: aPlayer currentSquare equals: secondSquare.
 ]
 
-{ #category : 'tests - initialization' }
+{ #category : 'tests - player position' }
 BoardTest >> testPlacingPlayerUpdatesBothSides [
 
 	| aBoard aPlayer aSquare |
@@ -72,4 +101,35 @@ BoardTest >> testPlacingPlayerUpdatesBothSides [
 	
 	self assert: aPlayer currentSquare equals: aSquare.
 	self assert: (aSquare hasPlayer: aPlayer).
+]
+
+{ #category : 'tests - moving players' }
+BoardTest >> testPlayTurnMovesPlayerUsingDie [
+
+	| aBoard aPlayer aDie |
+	
+	aBoard := Board withAmountOfSquares: 5.
+	aPlayer := Player named: 'Player 1'.
+	aDie := MockedDie withSides: 3. "roll = 3"
+	
+	aBoard place: aPlayer at: 1.
+	
+	aBoard playTurnFor: aPlayer using: aDie.
+	
+	self assert: aPlayer currentSquare equals: (aBoard squareAt: 4).
+]
+
+{ #category : 'tests - moving players' }
+BoardTest >> testTurnOrderReturnsNextPlayer [
+
+	| turnOrder player1 player2 |
+	
+	player1 := Player named: 'Player 1'.
+	player2 := Player named: 'Player 2'.
+	
+	turnOrder := TurnOrder withPlayers: { player1 . player2 }.
+	
+	self assert: turnOrder next equals: player1.
+	self assert: turnOrder next equals: player2.
+	self assert: turnOrder next equals: player1.
 ]

@@ -6,20 +6,7 @@ Class {
 	#tag : 'Board-Tests'
 }
 
-{ #category : 'tests - playerAmount' }
-SquaresTest >> testAddMultiplePlayersToSquare [
-
-	| aSquare |
-	aSquare := Square new.
-	aSquare increasingPlayerAmount.
-	aSquare increasingPlayerAmount.
-	
-	self assert: aSquare amountOfPlayersInSquare equals: 2.
-
-
-]
-
-{ #category : 'tests - listOfPlayers' }
+{ #category : 'tests - Players' }
 SquaresTest >> testAddPlayerToSquareList [
 
 	| aSquare aPlayer |
@@ -33,17 +20,7 @@ SquaresTest >> testAddPlayerToSquareList [
 	self assert: (aSquare hasPlayer: aPlayer).
 ]
 
-{ #category : 'tests - playerAmount' }
-SquaresTest >> testCannotReducePlayersAmountWhenSquareIsEmpty [
-
-	| aSquare |
-	
-	aSquare := Square new.
-	
-	self should: [ aSquare reducePlayerAmount ] raise: Error.
-]
-
-{ #category : 'tests - listOfPlayers' }
+{ #category : 'tests - Players' }
 SquaresTest >> testCannotRemovePlayerThatIsNotInSquare [
 
 	| aSquare aPlayer |
@@ -65,35 +42,7 @@ SquaresTest >> testCreateSquare [
 
 ]
 
-{ #category : 'tests - playerAmount' }
-SquaresTest >> testEncreasePlayersAmount [
-
-	| aSquare |
-	aSquare := Square new.
-	aSquare increasingPlayerAmount.
-	
-	self assert: aSquare amountOfPlayersInSquare equals: 1.
-
-
-]
-
-{ #category : 'tests - playerAmount' }
-SquaresTest >> testReducePlayersAmount [
-
-	| aSquare |
-	aSquare := Square new.
-	aSquare increasingPlayerAmount.
-	
-	self assert: aSquare amountOfPlayersInSquare equals: 1.
-	
-	aSquare reducePlayerAmount.
-	
-	self assert: aSquare amountOfPlayersInSquare equals: 0.
-
-
-]
-
-{ #category : 'tests - listOfPlayers' }
+{ #category : 'tests - Players' }
 SquaresTest >> testRemovePlayerFromSquare [
 
 	| aSquare aPlayer |
