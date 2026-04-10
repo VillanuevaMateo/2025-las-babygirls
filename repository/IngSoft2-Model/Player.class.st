@@ -1,116 +1,43 @@
 "
-Represents a player.
+Uniquely identifies each player and knows their exact position (the exact square)
 "
 Class {
 	#name : 'Player',
 	#superclass : 'Object',
 	#instVars : [
-		'shields',
-		'laps',
-		'remainingSkippedTurns',
-		'cards'
+		'name',
+		'currentSquare'
 	],
-	#category : 'IngSoft2-Model',
-	#package : 'IngSoft2-Model'
+	#category : 'IngSoft2-Model-Board',
+	#package : 'IngSoft2-Model',
+	#tag : 'Board'
 }
 
-{ #category : 'behavior - cards' }
-Player >> card: aNumberOfCard [
-    | selectedCard |
-    
-    selectedCard := cards at: aNumberOfCard.
-
-    ^selectedCard.
+{ #category : 'instance creation' }
+Player class >> named: aName [ 
+	^ self new initializeNamed: aName
 ]
 
 { #category : 'accessing' }
-Player >> cards [
-	^ cards
-]
-
-{ #category : 'behavior race' }
-Player >> decrementLap [
-
-laps := laps - 1.
-]
-
-{ #category : 'behavior race' }
-Player >> decrementSkippedTurns [
-
-	remainingSkippedTurns:= remainingSkippedTurns - 1
-]
-
-{ #category : 'behavior race' }
-Player >> incrementLap [
-
-laps := laps +1.
+Player >> currentSquare [
+	^ currentSquare
 ]
 
 { #category : 'initialization' }
-Player >> initialize [
-	shields := 3 .
-	laps := 0.
-	remainingSkippedTurns := 0.
-	
-	cards := OrderedCollection new .
-	
+Player >> initializeNamed: aName [
 
+	aName isEmpty ifTrue: [ self error: 'Name cannot be empty' ].
+	currentSquare := nil.
+	name := aName.
 ]
 
-{ #category : 'behavior race' }
-Player >> isSkippingTurn [
+{ #category : 'path commands' }
+Player >> moveTo: aSquare [
 
-^(remainingSkippedTurns > 0)
+	currentSquare := aSquare.
 ]
 
 { #category : 'accessing' }
-Player >> laps [
-	^ laps
-]
-
-{ #category : 'behavior race' }
-Player >> loseShield [
-
-	shields := shields - 1.
-	shields <= 0 ifFalse: [ ^ self ].
-	remainingSkippedTurns := 2.
-	shields := 3
-]
-
-{ #category : 'behavior - cards' }
-Player >> receiveCard: aCard [
-    
-    cards add: aCard.
-
-]
-
-{ #category : 'behavior race' }
-Player >> recoverShields [
-
-shields := 3.
-]
-
-{ #category : 'accessing' }
-Player >> remainingSkippedTurns [
-
-	^ remainingSkippedTurns
-]
-
-{ #category : 'accessing' }
-Player >> shield [
-	^shields.
-]
-
-{ #category : 'behavior - cards' }
-Player >> useCard: aCardIndex with: aMatch toPlayer: aPlayer [
-    | selectedCard |
-
-    (aCardIndex isInteger and: [ aCardIndex > 0 and: [ aCardIndex <= cards size ] ]) ifFalse: [
-        Error signal: 'Invalid card index: ', aCardIndex printString
-    ].
-
-    selectedCard := cards at: aCardIndex.
-    aMatch activateCard: selectedCard to: aPlayer.
-    cards removeAt: aCardIndex.
-
+Player >> name [
+	^ name
 ]
