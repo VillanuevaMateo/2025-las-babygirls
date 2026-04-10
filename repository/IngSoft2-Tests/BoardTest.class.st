@@ -1,121 +1,135 @@
 Class {
 	#name : 'BoardTest',
 	#superclass : 'TestCase',
-	#category : 'IngSoft2-Tests',
-	#package : 'IngSoft2-Tests'
+	#category : 'IngSoft2-Tests-Board-Tests',
+	#package : 'IngSoft2-Tests',
+	#tag : 'Board-Tests'
 }
 
-{ #category : 'asserting' }
-BoardTest >> should: anErrorBlock raise: anErrorClass withMessageText: errorMessage [
+{ #category : 'tests - properties' }
+BoardTest >> testBoardKeepsSquaresOrder [
 
-	self
-		should: anErrorBlock
-		raise: anErrorClass
-		withExceptionDo: [ :error |
-			self assert: (error messageText) equals:
-				errorMessage ]
+	| aBoard firstSquare secondSquare |
+	
+	aBoard := Board withAmountOfSquares: 2.
+	
+	firstSquare := aBoard squareAt: 1.
+	secondSquare := aBoard squareAt: 2.
+	
+	self deny: firstSquare equals: secondSquare.
 ]
 
-{ #category : 'tests' }
-BoardTest >> testBoardHasCorrectSize [
-    | board builder aNumberOfSquares aNumberOfPlayers dice |
+{ #category : 'tests - properties' }
+BoardTest >> testBoardKnowsItsSize [
+
+	| aBoard |
 	
-	aNumberOfSquares := 50.
-	aNumberOfPlayers := 3.
-	dice := MockedDie withSides: 6.
+	aBoard := Board withAmountOfSquares: 7.
 	
-   builder := Builder with: aNumberOfSquares players: aNumberOfPlayers dice: dice laps: 3. 
-	board := builder buildNormalBoard.
-    self assert: (board squares) size equals: 50
+	self assert: (aBoard size) equals: 7.
 ]
 
-{ #category : 'asserting' }
-BoardTest >> testDistributionFor10000Squares [
+{ #category : 'tests - initialization' }
+BoardTest >> testCreateBoardWithSquares [
 
-	| board counts numberOfSquares expectedRanges builder aDie numberOfPlayers effectCountSum |
-	numberOfSquares := 10000.
-	numberOfPlayers := 1.
-	aDie := MockedDie withSides: 6.
-
-	builder := Builder with: numberOfSquares players: numberOfPlayers dice: aDie laps: 3.
-	board := builder buildNormalBoard.
-
-	counts := Dictionary new.
-	counts
-		at: #BlackHole
-		put: (board squares count: [ :s | s isKindOf: BlackHole ]).
-	counts
-		at: #HyperSpaceJump
-		put: (board squares count: [ :s | s isKindOf: HyperSpaceJump ]).
-	counts
-		at: #MoonWalk
-		put: (board squares count: [ :s | s isKindOf: MoonWalk ]).
-	counts
-		at: #HyperJump
-		put: (board squares count: [ :s | s isKindOf: HyperJump ]).
-	counts
-		at: #AtomicBomb
-		put: (board squares count: [ :s | s isKindOf: AtomicBomb ]).
-	counts
-		at: #CardSquare
-		put: (board squares count: [ :s | s isKindOf: CardSquare ]).
-
-	"Calculamos normales como resto"
-	effectCountSum := counts values sum.
-	counts at: #Normal put: numberOfSquares - effectCountSum.
-
-	"Ahora pone un error del 10% para el valor esperado de cada tipo de celda"
-	expectedRanges := Dictionary new.
-	expectedRanges at: #Normal put: {
-			(numberOfSquares * 0.30 * 0.90).
-			(numberOfSquares * 0.30 * 1.10) }.
-
-	expectedRanges at: #BlackHole put: {
-			(numberOfSquares * 0.20 * 0.90).
-			(numberOfSquares * 0.20 * 1.10) }.
-	expectedRanges at: #HyperSpaceJump put: {
-			(numberOfSquares * 0.20 * 0.90).
-			(numberOfSquares * 0.20 * 1.10) }.
-	expectedRanges at: #MoonWalk put: {
-			(numberOfSquares * 0.10 * 0.90).
-			(numberOfSquares * 0.10 * 1.10) }.
-	expectedRanges at: #HyperJump put: {
-			(numberOfSquares * 0.08 * 0.90).
-			(numberOfSquares * 0.08 * 1.10) }.
-	expectedRanges at: #AtomicBomb put: {
-			(numberOfSquares * 0.02 * 0.90).
-			(numberOfSquares * 0.02 * 1.10) }.
-	expectedRanges at: #CardSquare put: {
-			(numberOfSquares * 0.10 * 0.90).
-			(numberOfSquares * 0.10 * 1.10) }.
-
-	expectedRanges keysAndValuesDo: [ :effect :range |
-		| count message lower upper |
-		count := counts at: effect.
-		lower := range first.
-		upper := range second.
-		message := 'Count for ' , effect printString , ' was '
-		           , count printString , ', expected between '
-		           , lower printString , ' and ' , upper printString.
-		self
-			assert: (count between: lower asInteger and: upper asInteger)
-			description: message ]
+	| aBoard |
+	
+	aBoard := Board withAmountOfSquares: 5.
+	
+	self assert: (aBoard squareAt: 1) notNil.
+	self assert: (aBoard squareAt: 5) notNil.
 ]
 
-{ #category : 'tests' }
-BoardTest >> testWhenTheSquaresAreLessThan10Fails [
+{ #category : 'tests - moving players' }
+BoardTest >> testMovePlayerForward [
 
-	| aBoard aNumberOfSquares numberOfPlayers numberOfSquares builder aDie |
+	| aBoard aPlayer |
 	
-	numberOfSquares := 3.
-	numberOfPlayers := 3.
-	aNumberOfSquares := -1.
-	aDie := MockedDie withSides: 6.
+	aBoard := Board withAmountOfSquares: 5.
+	aPlayer := Player named: 'Player 1'.
 	
-    builder := Builder with: numberOfSquares players: numberOfPlayers dice: aDie laps: 3.
+	aBoard place: aPlayer at: 1.
+	aBoard move: aPlayer forward: 3.
+	
+	self assert: aPlayer currentSquare equals: (aBoard squareAt: 4).
+]
 
-	self
-		should: [aBoard := builder buildNormalBoard ]
-		raise: Error
-		withMessageText: 'The board must have at least 10 squares.'
+{ #category : 'tests - moving players' }
+BoardTest >> testMovePlayerUsingDie [
+
+	| aBoard aPlayer aDie |
+	
+	aBoard := Board withAmountOfSquares: 5.
+	aPlayer := Player named: 'Player 1'.
+	aDie := MockedDie withSides: 3.
+	
+	aBoard place: aPlayer at: 1.
+	aBoard move: aPlayer forward: (aDie roll).
+	
+	self assert: aPlayer currentSquare equals: (aBoard squareAt: 4).
+]
+
+{ #category : 'tests - player position' }
+BoardTest >> testPlacingPlayerRemovesItFromPreviousSquare [
+
+	| aBoard aPlayer firstSquare secondSquare |
+	
+	aBoard := Board withAmountOfSquares: 5.
+	aPlayer := Player named: 'Player 1'.
+	
+	aBoard place: aPlayer at: 1.
+	firstSquare := aBoard squareAt: 1.
+	
+	aBoard place: aPlayer at: 2.
+	secondSquare := aBoard squareAt: 2.
+	
+	self deny: (firstSquare hasPlayer: aPlayer).
+	self assert: (secondSquare hasPlayer: aPlayer).
+	self assert: aPlayer currentSquare equals: secondSquare.
+]
+
+{ #category : 'tests - player position' }
+BoardTest >> testPlacingPlayerUpdatesBothSides [
+
+	| aBoard aPlayer aSquare |
+	
+	aBoard := Board withAmountOfSquares: 5.
+	aPlayer := Player named: 'Player 1'.
+	
+	aBoard place: aPlayer at: 1.
+	aSquare := aBoard squareAt: 1.
+	
+	self assert: aPlayer currentSquare equals: aSquare.
+	self assert: (aSquare hasPlayer: aPlayer).
+]
+
+{ #category : 'tests - moving players' }
+BoardTest >> testPlayTurnMovesPlayerUsingDie [
+
+	| aBoard aPlayer aDie |
+	
+	aBoard := Board withAmountOfSquares: 5.
+	aPlayer := Player named: 'Player 1'.
+	aDie := MockedDie withSides: 3. "roll = 3"
+	
+	aBoard place: aPlayer at: 1.
+	
+	aBoard playTurnFor: aPlayer using: aDie.
+	
+	self assert: aPlayer currentSquare equals: (aBoard squareAt: 4).
+]
+
+{ #category : 'tests - moving players' }
+BoardTest >> testTurnOrderReturnsNextPlayer [
+
+	| turnOrder player1 player2 |
+	
+	player1 := Player named: 'Player 1'.
+	player2 := Player named: 'Player 2'.
+	
+	turnOrder := TurnOrder withPlayers: { player1 . player2 }.
+	
+	self assert: turnOrder next equals: player1.
+	self assert: turnOrder next equals: player2.
+	self assert: turnOrder next equals: player1.
 ]

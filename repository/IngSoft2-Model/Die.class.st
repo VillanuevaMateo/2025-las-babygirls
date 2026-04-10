@@ -7,8 +7,9 @@ Class {
 	#instVars : [
 		'sides'
 	],
-	#category : 'IngSoft2-Model',
-	#package : 'IngSoft2-Model'
+	#category : 'IngSoft2-Model-Die',
+	#package : 'IngSoft2-Model',
+	#tag : 'Die'
 }
 
 { #category : 'initialization' }
