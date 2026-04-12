@@ -34,3 +34,20 @@ ActionsTest >> testSkipTurn [
 	self assert: player shields equals: 3.
 	self assert: (board indexOfPlayer: player ) equals: 1.
 ]
+
+{ #category : 'tests - choosing actions' }
+ActionsTest >> testSkippedTurnIgnoresChosenAction [
+
+	| game player action |
+
+	action := RestAction new.
+	player := Player named: 'P1'.
+	player loseShield.
+	player loseShield.
+	player loseShield. "0 shields → 2 skips"
+
+	game playTurnWith: action.
+
+	self assert: player shields equals: 0.
+	self assert: player skippedTurns equals: 1.
+]
