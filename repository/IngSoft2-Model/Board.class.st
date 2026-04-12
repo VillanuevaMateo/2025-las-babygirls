@@ -18,6 +18,12 @@ Board class >> withAmountOfSquares: numberOfSquares [
 	^ self new initializeWithAmountOfSquares: numberOfSquares
 ]
 
+{ #category : 'instance creation' }
+Board class >> withSquares: squares [
+
+	^ self new initializeWithSquares: squares
+]
+
 { #category : 'initialization' }
 Board >> initializeWithAmountOfSquares: numberOfSquares [
 
@@ -26,6 +32,13 @@ Board >> initializeWithAmountOfSquares: numberOfSquares [
 	1 to: numberOfSquares do: [ :anIndex |
 		squares add: Square new
 	].
+]
+
+{ #category : 'initialization' }
+Board >> initializeWithSquares: initialSquares [
+
+	squares := initialSquares.
+	
 ]
 
 { #category : 'accessing' }
@@ -52,6 +65,7 @@ Board >> move: aPlayer forward: steps [
 	newIndex := ((newIndex - 1) \\ size) + 1.
 
 	self place: aPlayer at: newIndex.
+	self resolveLandingOf: aPlayer.
 ]
 
 { #category : 'behavior' }
@@ -60,7 +74,7 @@ Board >> move: aPlayer using: aDie [
 	self move: aPlayer forward: aDie roll.
 ]
 
-{ #category : 'accessing' }
+{ #category : 'behavior' }
 Board >> place: aPlayer at: aPosition [
 
 	| targetSquare currentSquare |
@@ -77,9 +91,19 @@ Board >> place: aPlayer at: aPosition [
 ]
 
 { #category : 'behavior' }
+Board >> place: aPlayer atSquare: aSquare [
+	aPlayer moveTo: aSquare
+]
+
+{ #category : 'behavior' }
 Board >> playTurnFor: aPlayer using: aDie [
 
 	self move: aPlayer using: aDie.
+]
+
+{ #category : 'behavior' }
+Board >> resolveLandingOf: aPlayer [
+	aPlayer currentSquare applyEffectTo: aPlayer in: self
 ]
 
 { #category : 'accessing' }
@@ -92,4 +116,9 @@ Board >> size [
 Board >> squareAt: aPosition [
 
 	^ squares at: aPosition
+]
+
+{ #category : 'accessing' }
+Board >> squares [
+^ squares 
 ]

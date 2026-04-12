@@ -24,6 +24,11 @@ Square >> amountOfPlayersInSquare [
 	^ players size
 ]
 
+{ #category : 'behavior' }
+Square >> applyEffectTo: aPlayer in: aBoard [
+	^nil.
+]
+
 { #category : 'getter' }
 Square >> hasPlayer: aPlayer [
 

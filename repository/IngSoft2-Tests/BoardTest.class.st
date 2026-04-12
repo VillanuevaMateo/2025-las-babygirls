@@ -45,7 +45,7 @@ BoardTest >> testMovePlayerForward [
 
 	| aBoard aPlayer |
 	
-	aBoard := Board withAmountOfSquares: 5.
+	aBoard := Board withAmountOfSquares: 5 .
 	aPlayer := Player named: 'Player 1'.
 	
 	aBoard place: aPlayer at: 1.
@@ -59,7 +59,7 @@ BoardTest >> testMovePlayerUsingDie [
 
 	| aBoard aPlayer aDie |
 	
-	aBoard := Board withAmountOfSquares: 5.
+	aBoard := Board withAmountOfSquares: 5 .
 	aPlayer := Player named: 'Player 1'.
 	aDie := MockedDie withSides: 3.
 	
@@ -108,7 +108,8 @@ BoardTest >> testPlayTurnMovesPlayerUsingDie [
 
 	| aBoard aPlayer aDie |
 	
-	aBoard := Board withAmountOfSquares: 5.
+	aBoard := Board withAmountOfSquares: 5 .
+
 	aPlayer := Player named: 'Player 1'.
 	aDie := MockedDie withSides: 3. "roll = 3"
 	
