@@ -5,7 +5,12 @@ BlackHole.
 Class {
 	#name : 'BlackHoleSquare',
 	#superclass : 'Square',
-	#category : 'IngSoft2-Model-Board',
+	#category : 'IngSoft2-Model-Squares',
 	#package : 'IngSoft2-Model',
-	#tag : 'Board'
+	#tag : 'Squares'
 }
+
+{ #category : 'behavior' }
+BlackHoleSquare >> applyEffectTo: aPlayer in: aBoard [
+	aBoard movePlayer: aPlayer by: -4
+]

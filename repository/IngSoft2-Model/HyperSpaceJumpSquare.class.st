@@ -6,7 +6,13 @@ HyperSpaceJump.
 Class {
 	#name : 'HyperSpaceJumpSquare',
 	#superclass : 'Square',
-	#category : 'IngSoft2-Model-Board',
+	#category : 'IngSoft2-Model-Squares',
 	#package : 'IngSoft2-Model',
-	#tag : 'Board'
+	#tag : 'Squares'
 }
+
+{ #category : 'behavior' }
+HyperSpaceJumpSquare >> applyEffectTo: aPlayer in: aBoard [
+	aBoard movePlayer: aPlayer by: 4.
+	aPlayer loseShield.
+]

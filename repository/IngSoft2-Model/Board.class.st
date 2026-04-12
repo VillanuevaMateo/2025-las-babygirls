@@ -5,11 +5,12 @@ Class {
 	#name : 'Board',
 	#superclass : 'Object',
 	#instVars : [
-		'squares'
+		'squares',
+		'totalParsecs'
 	],
-	#category : 'IngSoft2-Model-Board',
+	#category : 'IngSoft2-Model-Game',
 	#package : 'IngSoft2-Model',
-	#tag : 'Board'
+	#tag : 'Game'
 }
 
 { #category : 'instance creation' }
@@ -29,86 +30,87 @@ Board class >> withSquares: squares [
 	^ self new initializeWithSquares: squares
 ]
 
+{ #category : 'accessing' }
+Board >> indexOf: aSquare [
+	^ squares indexOf: aSquare
+]
+
+{ #category : 'accessing' }
+Board >> indexOfPlayer: aPlayer [
+	^ self indexOf: aPlayer currentSquare
+]
+
 { #category : 'initialization' }
 Board >> initializeWithAmountOfSquares: numberOfSquares [
 
 	squares := OrderedCollection new.
-	
+	totalParsecs := squares size * 2.
 	1 to: numberOfSquares do: [ :anIndex |
 		squares add: Square new
 	].
+	
 ]
 
 { #category : 'initialization' }
 Board >> initializeWithSquares: initialSquares [
 
 	squares := initialSquares.
+	totalParsecs := squares size * 2.
 	
 ]
 
-{ #category : 'accessing' }
-Board >> isLastSquare: aSquare [
-
-	^ aSquare = squares last
-]
-
 { #category : 'behavior' }
-Board >> move: aPlayer forward: steps [
+Board >> movePlayer: aPlayer by: steps [
 
-	| currentIndex newIndex size laps |
+	| currentIndex size rawIndex laps newIndex |
 
-	currentIndex := squares indexOf: aPlayer currentSquare.
+	currentIndex := self indexOfPlayer: aPlayer.
 	size := squares size.
 
-	newIndex := currentIndex + steps.
+	rawIndex := currentIndex + steps.
 
-	laps := (newIndex - 1) // size.
+	laps := (rawIndex - 1) // size.
+
 	laps > 0 ifTrue: [
 		laps timesRepeat: [ aPlayer completeLap ].
 	].
 
-	newIndex := ((newIndex - 1) \\ size) + 1.
+	laps < 0 ifTrue: [
+		(laps abs) timesRepeat: [ aPlayer undoLap ].
+	].
+
+	newIndex := ((rawIndex - 1) \\ size) + 1.
 
 	self place: aPlayer at: newIndex.
-	self resolveLandingOf: aPlayer.
 ]
 
-{ #category : 'behavior' }
-Board >> move: aPlayer using: aDie [
-
-	self move: aPlayer forward: aDie roll.
-]
-
-{ #category : 'behavior' }
-Board >> place: aPlayer at: aPosition [
-
-	| targetSquare currentSquare |
-	
-	targetSquare := self squareAt: aPosition.
-	currentSquare := aPlayer currentSquare.
-	
-	currentSquare ifNotNil: [
-		currentSquare removePlayer: aPlayer
+{ #category : 'accessing' }
+Board >> parsecsPerSquare [
+	(totalParsecs \\ squares size) ~= 0 ifTrue: [
+		self error: 'Parsecs not evenly divisible'
 	].
-	
-	targetSquare addPlayer: aPlayer.
-	aPlayer moveTo: targetSquare.
+	^ totalParsecs // squares size
+]
+
+{ #category : 'behavior' }
+Board >> place: aPlayer at: anIndex [
+
+	| newSquare oldSquare |
+
+	newSquare := self squareAt: anIndex.
+	oldSquare := aPlayer currentSquare.
+
+	oldSquare ifNotNil: [
+		oldSquare removePlayer: aPlayer
+	].
+
+	newSquare addPlayer: aPlayer.
+	aPlayer moveTo: newSquare.
 ]
 
 { #category : 'behavior' }
 Board >> place: aPlayer atSquare: aSquare [
 	aPlayer moveTo: aSquare
-]
-
-{ #category : 'behavior' }
-Board >> playTurnFor: aPlayer using: aDie [
-
-	self move: aPlayer using: aDie.
-]
-
-{ #category : 'behavior' }
-Board >> resolveLandingOf: aPlayer [
-	aPlayer currentSquare applyEffectTo: aPlayer in: self
 ]
 
 { #category : 'accessing' }
@@ -126,4 +128,9 @@ Board >> squareAt: aPosition [
 { #category : 'accessing' }
 Board >> squares [
 ^ squares 
+]
+
+{ #category : 'accessing' }
+Board >> stepsForParsecs: parsecs [
+	^ parsecs // self parsecsPerSquare
 ]

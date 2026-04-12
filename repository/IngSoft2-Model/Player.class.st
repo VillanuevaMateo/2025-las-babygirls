@@ -7,11 +7,13 @@ Class {
 	#instVars : [
 		'name',
 		'currentSquare',
-		'laps'
+		'laps',
+		'shields',
+		'skippedTurns'
 	],
-	#category : 'IngSoft2-Model-Board',
+	#category : 'IngSoft2-Model-Game',
 	#package : 'IngSoft2-Model',
-	#tag : 'Board'
+	#tag : 'Game'
 }
 
 { #category : 'instance creation' }
@@ -29,6 +31,11 @@ Player >> currentSquare [
 	^ currentSquare
 ]
 
+{ #category : 'accessing' }
+Player >> hasTurnsToSkip [
+	^ skippedTurns > 0
+]
+
 { #category : 'initialization' }
 Player >> initializeNamed: aName [
 
@@ -36,11 +43,22 @@ Player >> initializeNamed: aName [
 	currentSquare := nil.
 	name := aName.
 	laps := 0.
+	shields := 3.
+	skippedTurns := 0.
 ]
 
 { #category : 'accessing' }
 Player >> laps [
 	^ laps
+]
+
+{ #category : 'shields' }
+Player >> loseShield [
+
+	shields := shields - 1.
+	shields = 0 ifTrue: [
+		skippedTurns := 2
+	].
 ]
 
 { #category : 'change position' }
@@ -52,4 +70,31 @@ Player >> moveTo: aSquare [
 { #category : 'accessing' }
 Player >> name [
 	^ name
+]
+
+{ #category : 'rest' }
+Player >> rest [
+	shields := 3.
+]
+
+{ #category : 'accessing' }
+Player >> shields [
+	^ shields
+]
+
+{ #category : 'rest' }
+Player >> skipTurn [
+	skippedTurns := skippedTurns - 1.
+	shields :=3.
+]
+
+{ #category : 'accessing' }
+Player >> skippedTurns [
+	^ skippedTurns
+]
+
+{ #category : 'change position' }
+Player >> undoLap [
+	
+	laps := laps - 1
 ]

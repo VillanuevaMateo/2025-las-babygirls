@@ -66,7 +66,18 @@ GameTest >> testGamePlayTurnMovesNextPlayer [
 
 	| aBoard player1 player2 turnOrder aDie aGame |
 	
-	aBoard := Board withAmountOfSquares: 10.
+	aBoard := Board withSquares: {
+		Square new.
+		Square new.
+		Square new.
+		Square new.
+		Square new.
+		Square new.
+		Square new.
+		Square new.
+		Square new.
+		Square new
+	}.
 	player1 := Player named: 'Player 1'.
 	player2 := Player named: 'Player 2'.
 	
@@ -74,7 +85,7 @@ GameTest >> testGamePlayTurnMovesNextPlayer [
 	aBoard place: player2 at: 1.
 	
 	turnOrder := TurnOrder withPlayers: { player1 . player2 }.
-	aDie := MockedDie withSides: 3.
+	aDie := MockedSequencedDie withSequence: #(3 5).
 	
 	aGame := Game 
 		withBoard: aBoard 
@@ -88,7 +99,8 @@ GameTest >> testGamePlayTurnMovesNextPlayer [
 	
 	aGame playTurn.
 	
-	self assert: player2 currentSquare equals: (aBoard squareAt: 4).
+	self assert: player2 currentSquare equals: (aBoard squareAt: 6).
+	
 ]
 
 { #category : 'tests - moving players' }
@@ -100,7 +112,7 @@ GameTest >> testPlayerCompletesALapWhenPassingLastSquare [
 	player := Player named: 'Player 1'.
 	
 	board place: player at: 4.
-	board move: player forward: 3.
+	board movePlayer: player by: 3.
 	
 	self assert: player currentSquare equals: (board squareAt: 2).
 	self assert: player laps equals: 1.

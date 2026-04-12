@@ -1,9 +1,9 @@
 Class {
 	#name : 'DieTest',
 	#superclass : 'TestCase',
-	#category : 'IngSoft2-Tests-Die-Tests',
+	#category : 'IngSoft2-Tests-Game-Tests',
 	#package : 'IngSoft2-Tests',
-	#tag : 'Die-Tests'
+	#tag : 'Game-Tests'
 }
 
 { #category : 'asserting' }

@@ -22,7 +22,39 @@ Game class >> withBoard: aBoard turnOrder: aTurnOrder die: aDie requiredLaps: aN
 	^self new initializeWithBoard: aBoard turnOrder: aTurnOrder die: aDie requiredLaps: aNumber.
 ]
 
-{ #category : 'events' }
+{ #category : 'combats' }
+Game >> applyCombatLossTo: aPlayer [
+
+	aPlayer loseShield.
+	board place: aPlayer at: 1.
+]
+
+{ #category : 'accessing' }
+Game >> checkWinner: aPlayer [
+
+	aPlayer laps >= requiredLaps ifTrue: [
+		winner := aPlayer
+	]
+]
+
+{ #category : 'combats' }
+Game >> fightBetween: playerA and: playerB [
+
+	| rollA rollB loser |
+
+	rollA := die roll.
+	rollB := die roll.
+
+	rollA = rollB ifTrue: [ ^ self ].
+
+	loser := rollA < rollB
+		ifTrue: [ playerA ]
+		ifFalse: [ playerB ].
+
+	self applyCombatLossTo: loser.
+]
+
+{ #category : 'accessing' }
 Game >> hasWinner [
 
 	^ winner notNil
@@ -37,28 +69,95 @@ Game >> initializeWithBoard: aBoard turnOrder: aTurnOrder die: aDie requiredLaps
 	requiredLaps := laps.
 ]
 
-{ #category : 'events' }
+{ #category : 'accessing' }
 Game >> isWinningPlayer: aPlayer [
 
 	^ aPlayer laps >= requiredLaps
 ]
 
-{ #category : 'behavior' }
+{ #category : 'moving players' }
+Game >> movePlayer: aPlayer by: steps [
+	board movePlayer: aPlayer by: steps
+]
+
+{ #category : 'moving players' }
+Game >> movePlayer: aPlayer forward: steps [ 
+
+	board movePlayer: aPlayer by: steps.
+	self resolveLandingOf: aPlayer.
+	self resolveCombatFor: aPlayer.
+]
+
+{ #category : 'play turn' }
 Game >> playTurn [
 
-	| player |
+	| currentPlayer |
 	
-	self hasWinner ifTrue: [ ^ self ].
-	player := turnOrder next.
+	winner ifNotNil: [ ^ self ].
+
+	currentPlayer := turnOrder next.
+
+	currentPlayer hasTurnsToSkip ifTrue: [
+		currentPlayer skipTurn.
+		^ self
+	].
 	
-	board playTurnFor: player using: die.
-	
-	(self isWinningPlayer: player) ifTrue: [
-		winner := player
+	self playTurnFor: currentPlayer using: die.
+
+	self checkWinner: currentPlayer.
+]
+
+{ #category : 'play turn' }
+Game >> playTurnFor: aPlayer using: aDie [
+
+	self movePlayer: aPlayer forward: aDie roll.
+]
+
+{ #category : 'accessing' }
+Game >> players [
+	^ turnOrder players
+]
+
+{ #category : 'combats' }
+Game >> resolveCombatFor: aPlayer [
+
+	| playersHere rolls minRoll losers |
+
+	playersHere := aPlayer currentSquare players.
+
+	playersHere size <= 1 ifTrue: [ ^ self ].
+
+	rolls := playersHere collect: [ :each |
+		each -> die roll
+	].
+
+	minRoll := (rolls collect: [ :assoc | assoc value ]) min.
+
+	losers := rolls select: [ :assoc |
+		assoc value = minRoll
+	].
+
+	losers do: [ :assoc |
+		self applyCombatLossTo: assoc key
 	].
 ]
 
-{ #category : 'events' }
+{ #category : 'moving players' }
+Game >> resolveLandingOf: aPlayer [
+	aPlayer currentSquare applyEffectTo: aPlayer in: self
+]
+
+{ #category : 'moving players' }
+Game >> sendToStart: aPlayer [
+	board place: aPlayer at: 1
+]
+
+{ #category : 'calculate parsecs' }
+Game >> stepsForParsecs: parsecs [
+	^ board stepsForParsecs: parsecs
+]
+
+{ #category : 'accessing' }
 Game >> winner [
 
 	^ winner

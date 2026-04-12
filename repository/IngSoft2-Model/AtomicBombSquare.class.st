@@ -7,7 +7,18 @@ AtomicBomb.
 Class {
 	#name : 'AtomicBombSquare',
 	#superclass : 'Square',
-	#category : 'IngSoft2-Model-Board',
+	#category : 'IngSoft2-Model-Squares',
 	#package : 'IngSoft2-Model',
-	#tag : 'Board'
+	#tag : 'Squares'
 }
+
+{ #category : 'behavior' }
+AtomicBombSquare >> applyEffectTo: aPlayer in: aGame [
+
+	aGame players do: [ :each |
+		aGame sendToStart: each
+	].
+	aGame players do: [ :each |
+		each loseShield 
+	].
+]

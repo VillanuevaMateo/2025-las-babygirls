@@ -4,9 +4,9 @@ This die is mocked. Test purposes.
 Class {
 	#name : 'MockedDie',
 	#superclass : 'Die',
-	#category : 'IngSoft2-Model-Die',
+	#category : 'IngSoft2-Model-Game',
 	#package : 'IngSoft2-Model',
-	#tag : 'Die'
+	#tag : 'Game'
 }
 
 { #category : 'behavior' }

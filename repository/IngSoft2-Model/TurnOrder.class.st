@@ -8,9 +8,9 @@ Class {
 		'players',
 		'currentIndex'
 	],
-	#category : 'IngSoft2-Model-Board',
+	#category : 'IngSoft2-Model-Game',
 	#package : 'IngSoft2-Model',
-	#tag : 'Board'
+	#tag : 'Game'
 }
 
 { #category : 'initialization' }
@@ -36,4 +36,9 @@ TurnOrder >> next [
 	].
 	
 	^ players at: currentIndex
+]
+
+{ #category : 'accessing' }
+TurnOrder >> players [ 
+	^players 
 ]

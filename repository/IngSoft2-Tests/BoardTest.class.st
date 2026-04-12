@@ -1,9 +1,9 @@
 Class {
 	#name : 'BoardTest',
 	#superclass : 'TestCase',
-	#category : 'IngSoft2-Tests-Board-Tests',
+	#category : 'IngSoft2-Tests-Game-Tests',
 	#package : 'IngSoft2-Tests',
-	#tag : 'Board-Tests'
+	#tag : 'Game-Tests'
 }
 
 { #category : 'tests - properties' }
@@ -49,7 +49,7 @@ BoardTest >> testMovePlayerForward [
 	aPlayer := Player named: 'Player 1'.
 	
 	aBoard place: aPlayer at: 1.
-	aBoard move: aPlayer forward: 3.
+	aBoard movePlayer: aPlayer by: 3.
 	
 	self assert: aPlayer currentSquare equals: (aBoard squareAt: 4).
 ]
@@ -64,7 +64,7 @@ BoardTest >> testMovePlayerUsingDie [
 	aDie := MockedDie withSides: 3.
 	
 	aBoard place: aPlayer at: 1.
-	aBoard move: aPlayer forward: (aDie roll).
+	aBoard movePlayer: aPlayer by: (aDie roll).
 	
 	self assert: aPlayer currentSquare equals: (aBoard squareAt: 4).
 ]
@@ -101,23 +101,6 @@ BoardTest >> testPlacingPlayerUpdatesBothSides [
 	
 	self assert: aPlayer currentSquare equals: aSquare.
 	self assert: (aSquare hasPlayer: aPlayer).
-]
-
-{ #category : 'tests - moving players' }
-BoardTest >> testPlayTurnMovesPlayerUsingDie [
-
-	| aBoard aPlayer aDie |
-	
-	aBoard := Board withAmountOfSquares: 5 .
-
-	aPlayer := Player named: 'Player 1'.
-	aDie := MockedDie withSides: 3. "roll = 3"
-	
-	aBoard place: aPlayer at: 1.
-	
-	aBoard playTurnFor: aPlayer using: aDie.
-	
-	self assert: aPlayer currentSquare equals: (aBoard squareAt: 4).
 ]
 
 { #category : 'tests - moving players' }

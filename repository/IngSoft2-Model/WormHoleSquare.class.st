@@ -8,9 +8,9 @@ Class {
 	#instVars : [
 		'pairedSquare'
 	],
-	#category : 'IngSoft2-Model-Board',
+	#category : 'IngSoft2-Model-Squares',
 	#package : 'IngSoft2-Model',
-	#tag : 'Board'
+	#tag : 'Squares'
 }
 
 { #category : 'behavior' }

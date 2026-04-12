@@ -7,9 +7,9 @@ Class {
 	#instVars : [
 		'players'
 	],
-	#category : 'IngSoft2-Model-Board',
+	#category : 'IngSoft2-Model-Squares',
 	#package : 'IngSoft2-Model',
-	#tag : 'Board'
+	#tag : 'Squares'
 }
 
 { #category : 'adding' }
@@ -41,6 +41,11 @@ Square >> initialize [
 	super initialize.
 	
 	players := OrderedCollection new.
+]
+
+{ #category : 'getter' }
+Square >> players [
+	^ players copy
 ]
 
 { #category : 'removing' }

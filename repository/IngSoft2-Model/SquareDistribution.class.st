@@ -4,9 +4,9 @@ knows the distribution assigned for each type of square
 Class {
 	#name : 'SquareDistribution',
 	#superclass : 'Object',
-	#category : 'IngSoft2-Model-SquareDistribution ',
+	#category : 'IngSoft2-Model-Squares',
 	#package : 'IngSoft2-Model',
-	#tag : 'SquareDistribution '
+	#tag : 'Squares'
 }
 
 { #category : 'behavior' }
