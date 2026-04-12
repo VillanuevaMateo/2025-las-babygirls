@@ -19,6 +19,11 @@ Board class >> withAmountOfSquares: numberOfSquares [
 ]
 
 { #category : 'instance creation' }
+Board class >> withAmountOfSquares: amount using: aDistribution [
+	^ self withSquares: (aDistribution generateSquares: amount)
+]
+
+{ #category : 'instance creation' }
 Board class >> withSquares: squares [
 
 	^ self new initializeWithSquares: squares
