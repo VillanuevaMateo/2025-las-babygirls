@@ -5,7 +5,7 @@ When executed, the player regains shield instead of performing any movement.""
 Class {
 	#name : 'RestAction',
 	#superclass : 'Action',
-	#category : 'IngSoft2-Model-Board',
+	#category : 'IngSoft2-Model-Actions',
 	#package : 'IngSoft2-Model',
-	#tag : 'Board'
+	#tag : 'Actions'
 }
