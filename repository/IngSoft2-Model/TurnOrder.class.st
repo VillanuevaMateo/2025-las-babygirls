@@ -8,9 +8,9 @@ Class {
 		'players',
 		'currentIndex'
 	],
-	#category : 'IngSoft2-Model-Game',
+	#category : 'IngSoft2-Model-Board',
 	#package : 'IngSoft2-Model',
-	#tag : 'Game'
+	#tag : 'Board'
 }
 
 { #category : 'initialization' }

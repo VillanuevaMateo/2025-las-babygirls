@@ -7,9 +7,9 @@ Class {
 	#instVars : [
 		'players'
 	],
-	#category : 'IngSoft2-Model-Squares',
+	#category : 'IngSoft2-Model-Board',
 	#package : 'IngSoft2-Model',
-	#tag : 'Squares'
+	#tag : 'Board'
 }
 
 { #category : 'adding' }

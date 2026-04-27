@@ -1,9 +1,9 @@
 Class {
 	#name : 'SquaresTest',
 	#superclass : 'TestCase',
-	#category : 'IngSoft2-Tests-Square-Tests',
+	#category : 'IngSoft2-Tests-Board-Tests',
 	#package : 'IngSoft2-Tests',
-	#tag : 'Square-Tests'
+	#tag : 'Board-Tests'
 }
 
 { #category : 'tests - Players' }

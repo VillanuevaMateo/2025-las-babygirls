@@ -1,9 +1,9 @@
 Class {
 	#name : 'BoardTest',
 	#superclass : 'TestCase',
-	#category : 'IngSoft2-Tests-Game-Tests',
+	#category : 'IngSoft2-Tests-Board-Tests',
 	#package : 'IngSoft2-Tests',
-	#tag : 'Game-Tests'
+	#tag : 'Board-Tests'
 }
 
 { #category : 'tests - properties' }
