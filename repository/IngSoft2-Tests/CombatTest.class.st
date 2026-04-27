@@ -110,8 +110,8 @@ CombatTest >> testPlayersFightWhenLandingOnSameSquare [
 	board place: player2 at: 3.
 
 	self assert: player1 shields equals: 3.
-	game movePlayer: player1 forward: 2. "cae con player2" "pierde player2"
-	self assert: player2 shields equals: 2.
-	self assert: (board indexOfPlayer: player2 ) equals: 1.
-	self assert: (board indexOfPlayer: player1 ) equals: 3.
+	game performMoveFor: player1. "cae con player2" "pierde player2"
+	self assert: player1 shields equals: 2.
+	self assert: (board indexOfPlayer: player2 ) equals: 3.
+	self assert: (board indexOfPlayer: player1 ) equals: 1.
 ]

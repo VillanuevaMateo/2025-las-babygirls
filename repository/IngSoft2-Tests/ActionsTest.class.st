@@ -7,6 +7,36 @@ Class {
 }
 
 { #category : 'tests - choosing actions' }
+ActionsTest >> testPlayerMovesUsingMoveAction [
+
+	| game board player turnOrder die |
+
+	die := MockedDie withSides: 3.
+
+	board := Board withSquares: {
+		Square new.
+		Square new.
+		Square new.
+		Square new
+	}.
+
+	player := Player named: 'P1'.
+	turnOrder := TurnOrder withPlayers: { player }.
+
+	game := Game 
+		withBoard: board 
+		turnOrder: turnOrder 
+		die: die 
+		requiredLaps: 5.
+
+	board place: player at: 1.
+
+	game playTurnWith: MoveAction new.
+
+	self assert: (board indexOfPlayer: player) equals: 4.
+]
+
+{ #category : 'tests - choosing actions' }
 ActionsTest >> testSkipTurn [
 
 	| game player action board turnOrder die |
@@ -38,16 +68,29 @@ ActionsTest >> testSkipTurn [
 { #category : 'tests - choosing actions' }
 ActionsTest >> testSkippedTurnIgnoresChosenAction [
 
-	| game player action |
+	| game player action board turnOrder die |
+	
+	board := Board withAmountOfSquares: 5.
+	player := Player named: 'Player 1'.
+	
+	board place: player at: 1.
+	
+	turnOrder := TurnOrder withPlayers: { player }.
+	die := MockedDie withSides: 15. 
+	
+	game := Game 
+		withBoard: board 
+		turnOrder: turnOrder 
+		die: die
+		requiredLaps: 2.
 
-	action := RestAction new.
-	player := Player named: 'P1'.
+	action := MoveAction new.
 	player loseShield.
 	player loseShield.
 	player loseShield. "0 shields → 2 skips"
 
 	game playTurnWith: action.
 
-	self assert: player shields equals: 0.
+	self assert: player shields equals: 3.
 	self assert: player skippedTurns equals: 1.
 ]

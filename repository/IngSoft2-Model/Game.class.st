@@ -77,13 +77,28 @@ Game >> isWinningPlayer: aPlayer [
 
 { #category : 'moving players' }
 Game >> movePlayer: aPlayer by: steps [
-	board movePlayer: aPlayer by: steps
+	board movePlayer: aPlayer by: steps.
 ]
 
 { #category : 'moving players' }
-Game >> movePlayer: aPlayer forward: steps [ 
+Game >> movePlayerByDieRoll: aPlayer [
+
+	| steps |
+
+	steps := die roll.
+
+	self movePlayer: aPlayer by: steps.
+]
+
+{ #category : 'moving players' }
+Game >> performMoveFor: aPlayer [
+
+	| steps |
+
+	steps := die roll.
 
 	board movePlayer: aPlayer by: steps.
+
 	self resolveLandingOf: aPlayer.
 	self resolveCombatFor: aPlayer.
 ]
@@ -102,7 +117,7 @@ Game >> playTurn [
 		^ self
 	].
 	
-	self playTurnFor: currentPlayer using: die.
+	self performMoveFor: currentPlayer.
 
 	self checkWinner: currentPlayer.
 ]
@@ -110,7 +125,27 @@ Game >> playTurn [
 { #category : 'play turn' }
 Game >> playTurnFor: aPlayer using: aDie [
 
-	self movePlayer: aPlayer forward: aDie roll.
+	self movePlayer: aPlayer by: aDie roll.
+]
+
+{ #category : 'play turn' }
+Game >> playTurnWith: anAction [
+
+	| currentPlayer |
+	
+	self hasWinner ifTrue: [ ^ self ].
+
+
+	currentPlayer := turnOrder next.
+
+	currentPlayer hasTurnsToSkip ifTrue: [
+		currentPlayer skipTurn.
+		^ self
+	].
+
+	anAction executeFor: currentPlayer in: self.
+
+	self checkWinner: currentPlayer.
 ]
 
 { #category : 'accessing' }
