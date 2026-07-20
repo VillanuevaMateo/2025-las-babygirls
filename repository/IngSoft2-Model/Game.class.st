@@ -37,21 +37,10 @@ Game >> checkWinner: aPlayer [
 	]
 ]
 
-{ #category : 'combats' }
-Game >> fightBetween: playerA and: playerB [
+{ #category : 'accessing' }
+Game >> currentPlayer [
 
-	| rollA rollB loser |
-
-	rollA := die roll.
-	rollB := die roll.
-
-	rollA = rollB ifTrue: [ ^ self ].
-
-	loser := rollA < rollB
-		ifTrue: [ playerA ]
-		ifFalse: [ playerB ].
-
-	self applyCombatLossTo: loser.
+	^ turnOrder currentPlayer
 ]
 
 { #category : 'accessing' }
@@ -146,6 +135,16 @@ Game >> playTurnWith: anAction [
 	anAction executeFor: currentPlayer in: self.
 
 	self checkWinner: currentPlayer.
+]
+
+{ #category : 'cards' }
+Game >> player: aPlayer playsCard: aCard [
+
+	(aCard canBePlayedBy: aPlayer in: self)
+		ifFalse: [ self error: 'Card cannot be played now' ].
+
+	aPlayer playCard: aCard.
+	aCard applyTo: self playedBy: aPlayer.
 ]
 
 { #category : 'accessing' }

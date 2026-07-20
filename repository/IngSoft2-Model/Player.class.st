@@ -9,7 +9,8 @@ Class {
 		'currentSquare',
 		'laps',
 		'shields',
-		'skippedTurns'
+		'skippedTurns',
+		'cards'
 	],
 	#category : 'IngSoft2-Model-Game',
 	#package : 'IngSoft2-Model',
@@ -19,6 +20,12 @@ Class {
 { #category : 'instance creation' }
 Player class >> named: aName [ 
 	^ self new initializeNamed: aName
+]
+
+{ #category : 'accessing' }
+Player >> cards [
+
+	^ cards
 ]
 
 { #category : 'change position' }
@@ -42,6 +49,8 @@ Player >> initializeNamed: aName [
 	aName isEmpty ifTrue: [ self error: 'Name cannot be empty' ].
 	currentSquare := nil.
 	name := aName.
+	cards := OrderedCollection new.
+	2 timesRepeat: [ cards add: Card random ].
 	laps := 0.
 	shields := 3.
 	skippedTurns := 0.
@@ -70,6 +79,15 @@ Player >> moveTo: aSquare [
 { #category : 'accessing' }
 Player >> name [
 	^ name
+]
+
+{ #category : 'cards' }
+Player >> playCard: aCard [
+
+	(cards includes: aCard)
+		ifFalse: [ self error: 'Player does not own this card' ].
+
+	cards remove: aCard.
 ]
 
 { #category : 'rest' }

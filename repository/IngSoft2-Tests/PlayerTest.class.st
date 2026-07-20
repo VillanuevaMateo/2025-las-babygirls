@@ -77,3 +77,13 @@ PlayerTest >> testPlayerRestsInsteadOfMoving [
 	self assert: player shields equals: 3.
 	self assert: (board indexOfPlayer: player) equals: 3.
 ]
+
+{ #category : 'tests - initialization' }
+PlayerTest >> testPlayerStartsWithTwoCards [
+
+	| player |
+
+	player := Player named: 'Player1'.
+
+	self assert: player cards size equals: 2.
+]
